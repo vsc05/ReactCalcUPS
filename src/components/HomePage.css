@@ -1,0 +1,167 @@
+@font-face {
+    font-family: "ALS Sector Bold Bold";
+    src: url("https://db.onlinewebfonts.com/t/55c75572ae1d9f96d61851294e1698ec.eot");
+    src: url("https://db.onlinewebfonts.com/t/55c75572ae1d9f96d61851294e1698ec.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/55c75572ae1d9f96d61851294e1698ec.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/55c75572ae1d9f96d61851294e1698ec.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/55c75572ae1d9f96d61851294e1698ec.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/55c75572ae1d9f96d61851294e1698ec.svg#ALS Sector Bold Bold")format("svg");
+}
+
+@font-face {
+    font-family: "ALS Sector Regular";
+    src: url("https://db.onlinewebfonts.com/t/0915cee867624e0c356dd676beb2dcee.eot");
+    src: url("https://db.onlinewebfonts.com/t/0915cee867624e0c356dd676beb2dcee.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/0915cee867624e0c356dd676beb2dcee.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/0915cee867624e0c356dd676beb2dcee.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/0915cee867624e0c356dd676beb2dcee.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/0915cee867624e0c356dd676beb2dcee.svg#ALS Sector Regular")format("svg");
+}
+
+/* --- ГЛОБАЛЬНЫЕ СТИЛИ --- */
+
+.page-wrapper {
+  background-color: #ffffff;
+  min-height: 100vh; 
+  width: 100%;
+  font-family: "ALS Sector Regular", sans-serif;
+}
+
+.content-container {
+  padding-top: 40px; 
+  padding-bottom: 40px;
+  max-width: 1200px;
+}
+
+/* --- ГЛАВНЫЙ БАННЕР --- */
+.hero-banner {
+  /* 🟢 Родительский контейнер для позиционирования */
+  position: relative;
+  background-color: #2CAEFF; /* Синий фон для левой части */
+  color: white; 
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 350px; 
+  display: flex;
+  align-items: center;
+  /* Фон с молниями, как на шаблоне */
+  background-image: url("/images/lightning-white.svg"); 
+  background-repeat: repeat;
+  background-size: 150px;
+  background-blend-mode: overlay;
+  opacity: 1; /* Чтобы синий цвет был насыщенным */
+}
+
+.hero-text-col {
+  padding: 40px;
+  /* Текстовый блок занимает свою часть ширины */
+  flex: 0 0 60%; 
+  max-width: 60%;
+  position: relative; 
+  z-index: 2; /* Поверх изображения */
+}
+
+.hero-text-col h1 {
+  font-family: "ALS Sector Bold Bold", sans-serif;
+  color: white; 
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.hero-text-col p {
+  font-size: 1.2rem;
+  max-width: 500px;
+  color: white; 
+}
+
+/* --- КОНТЕЙНЕР ДЛЯ ИЗОБРАЖЕНИЯ (правая часть) --- */
+.hero-image-col {
+  /* Блок, который резервирует место, если изображение не абсолютно позиционировано */
+  flex: 0 0 40%;
+  position: fixed;
+  min-height: 350px;
+  margin-left: 550px;
+}
+
+.hero-image-col img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: auto;
+    /* Устанавливаем диагональное обрезание, если изображение не обрезано заранее, 
+       но если оно уже обрезано (как вы указали), достаточно позиционирования */
+    clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
+    
+    /* Для макета используем только позиционирование */
+    max-height: 100%;
+    object-fit: cover;
+}
+
+
+/* --- Адаптивность --- */
+@media (min-width: 992px) { /* Десктоп */
+    .hero-image-col img {
+        right: -20px; 
+        max-width: 200%; /* Позволяет изображению заходить на синий блок */
+        height: 100%;
+        clip-path: none; /* Предполагаем, что изображение уже обрезано */
+    }
+}
+
+@media (max-width: 991.98px) { /* Планшеты и ниже */
+  .hero-banner {
+    flex-direction: column;
+  }
+  
+  .hero-text-col, .hero-image-col {
+    flex: 0 0 100%;
+    max-width: 100%;
+    min-height: 150px;
+    padding: 20px;
+  }
+  
+  .hero-text-col {
+    text-align: center;
+    padding: 40px 20px 20px 20px;
+  }
+  
+  .hero-text-col p {
+    max-width: none;
+  }
+  
+  .hero-image-col {
+      min-height: 250px;
+      position: relative;
+  }
+
+  .hero-image-col img {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      clip-path: none; 
+      border-radius: 0 0 12px 12px;
+  }
+}
+
+
+.hero-button {
+  min-width: 150px;
+  font-weight: bold;
+  margin: 15px 0px;
+  
+  background-color: white !important; 
+  color: #2CAEFF !important;
+  border: 3px solid #2CAEFF !important;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  transition: all 0.2s;
+}
+.hero-buttons-container > .d-inline-block:first-child {
+    margin-right: 20px; /* Отступ справа от первой кнопки */
+}
+
+.hero-button:hover {
+    background-color: #2CAEFF !important;
+    color: white !important;
+}

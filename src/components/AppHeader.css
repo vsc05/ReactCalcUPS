@@ -1,0 +1,72 @@
+/* --- СТИЛИ ШАПКИ ПРИЛОЖЕНИЯ --- */
+.app-header-container {
+    background-color: #2CAEFF; /* Синий фон */
+    padding: 15px 0;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.app-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex; /* Используем Flexbox для выравнивания заголовка и навигации */
+    justify-content: space-between; /* Растягивает элементы по краям */
+    align-items: center;
+}
+
+.app-header-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: white; /* Цвет ссылки */
+}
+
+.header-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: -200px;
+}
+
+.page-top-header {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 100px;
+    color: #f5f5f5;
+}
+
+/* --- СТИЛИЗАЦИЯ REACT-BOOTSTRAP NAVBAR --- */
+/* Убираем фон и рамки, которые React-Bootstrap добавляет по умолчанию */
+.app-header-content .navbar {
+    background-color: transparent !important;
+    padding: 0;
+}
+
+.app-header-content .container {
+    padding: 0;
+}
+
+.app-header-content .nav-link, 
+.app-header-content .navbar-toggler-icon,
+.app-header-content .dropdown-toggle {
+    color: white !important; /* Цвет текста ссылок */
+    font-weight: 600;
+}
+
+/* Стилизация при наведении */
+.app-header-content .nav-link:hover,
+.app-header-content .dropdown-toggle:hover {
+    color: #f5f5f5 !important;
+    opacity: 0.8;
+}
+
+/* Стилизация кнопки переключения (для мобильных) */
+.app-header-content .navbar-toggler {
+    border: none;
+    padding: 0;
+}
+
+/* Выравниваем навигационное меню вправо */
+.app-header-content .ms-auto {
+    margin-left: 200px !important;
+}

@@ -1,0 +1,244 @@
+@font-face {
+    font-family: "ALS Sector Bold Bold";
+    src: url("https://db.onlinewebfonts.com/t/55c75572ae1d9f96d61851294e1698ec.eot");
+    src: url("https://db.onlinewebfonts.com/t/55c75572ae1d9f96d61851294e1698ec.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/55c75572ae1d9f96d61851294e1698ec.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/55c75572ae1d9f96d61851294e1698ec.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/55c75572ae1d9f96d61851294e1698ec.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/55c75572ae1d9f96d61851294e1698ec.svg#ALS Sector Bold Bold")format("svg");
+}
+
+@font-face {
+    font-family: "ALS Sector Regular";
+    src: url("https://db.onlinewebfonts.com/t/0915cee867624e0c356dd676beb2dcee.eot");
+    src: url("https://db.onlinewebfonts.com/t/0915cee867624e0c356dd676beb2dcee.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/0915cee867624e0c356dd676beb2dcee.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/0915cee867624e0c356dd676beb2dcee.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/0915cee867624e0c356dd676beb2dcee.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/0915cee867624e0c356dd676beb2dcee.svg#ALS Sector Regular")format("svg");
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100%;
+    font-family: "ALS Sector Regular";
+}
+
+.devices-page-wrapper {
+    background-color: #ffffff;
+    padding: 0; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.app-header img {
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+}
+
+.app-header h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-align: left;
+    margin: 0; 
+}
+header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 70px;
+    background-color: #2CAEFF;
+}
+
+h1 {
+    color: #2CAEFF;
+    font-size: 32px;
+    text-align: center;
+    width: 100%;
+}
+
+a.trash-button{
+    text-decoration: none;
+}
+
+.search-form {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    width: 200px;
+    max-width: 1200px; /* Ширина, как в ComponentPage */
+    padding: 0 20px; /* Добавляем горизонтальный padding для отступов */
+}
+
+.search-form input {
+    padding: 10px 20px;
+    border: 4px solid #2CAEFF;
+    border-radius: 10px;
+    width: calc(100% + 600px);
+    font-size: 22px;
+}
+
+::placeholder{
+    color: rgb(214, 214, 214);
+}
+
+.search-form button {
+    padding: 10px 15px;
+    background-color: #2CAEFF;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 22px;
+    margin-left: 10px;
+    white-space: nowrap;
+}
+
+.devices-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 50px;
+    width: 100%;
+    max-width: 1200px; /* Ширина, как в ComponentPage */
+    justify-items: center;
+    padding: 0 20px; /* Добавляем горизонтальный padding для отступов */
+}
+
+.card {
+    background-color: white;
+    border-radius: 10px;
+    border: 4px solid #2CAEFF;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 350px;
+    transition: transform 0.2s ease; 
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-image {
+    width: 270px;
+    height: 250px;
+    margin-bottom: 10px;
+    object-fit: contain;
+    align-self: center;
+}
+
+.card-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #2CAEFF;
+}
+
+.card-power, .card-coeff {
+    margin-bottom: 12px;
+    color: #2CAEFF;
+    font-size: 18px;
+    font-family: "ALS Sector Regular";
+}
+
+.card-actions {
+    display: flex;
+    margin-top: 10px;
+}
+
+.btn-details {
+    padding: 8px 8px;
+    background-color: white;
+    color: #2CAEFF;
+    text-decoration: none;
+    border-radius: 13px;
+    border: 3px solid #2CAEFF;
+    font-size: 22px;
+    font-family: "ALS Sector Regular";
+}
+
+.btn-add {
+    margin-left: 5px;
+    padding: 8px 10px;
+    background-color: white;
+    color: #2CAEFF;
+    text-decoration: none;
+    border-radius: 13px;
+    border: 3px solid #2CAEFF;
+    font-size: 22px;
+    font-family: "ALS Sector Regular";
+}
+
+.trash-button {
+    position: fixed;
+    text-decoration: none;
+    bottom: 20px;
+    left: 20px;
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    border-radius: 50%;
+    border: 4px solid #2CAEFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.trash-count {
+    color: #2CAEFF;
+    font-weight: bold;
+    font-size: 50px;
+}
+
+.cart-icon {
+    position: fixed;
+    bottom: 10px;
+    left: 20px;
+    display: inline-block;
+    max-width: 50px;
+}
+
+.cart-icon img {
+    width: 95px;
+    height: 95px;
+}
+
+.cart-count {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: red;
+    color: white;
+    font-size: 33px;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 2px 5px;
+    min-width: 16px;
+    text-align: center;
+}
+
+.containerLoading {
+  opacity: 0.5;
+}
+
+.loadingBg {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.6);
+  z-index: 10;
+}
