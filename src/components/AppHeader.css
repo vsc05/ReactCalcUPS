@@ -9,10 +9,10 @@
 .app-header-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 5px;
     display: flex; /* Используем Flexbox для выравнивания заголовка и навигации */
     justify-content: space-between; /* Растягивает элементы по краям */
-    align-items: center;
+    align-items: stretch !important;
 }
 
 .app-header-link {
@@ -25,21 +25,26 @@
 .header-icon {
     width: 24px;
     height: 24px;
-    margin-right: -200px;
+
 }
 
 .page-top-header {
     font-size: 1.5rem;
     font-weight: 600;
-    margin: 100px;
+    width: 250px;
     color: #f5f5f5;
 }
 
 /* --- СТИЛИЗАЦИЯ REACT-BOOTSTRAP NAVBAR --- */
 /* Убираем фон и рамки, которые React-Bootstrap добавляет по умолчанию */
+.app-header-content .navbar .container {
+    width: 100% !important;
+}
+
 .app-header-content .navbar {
     background-color: transparent !important;
     padding: 0;
+    flex: 1 0 auto !important;
 }
 
 .app-header-content .container {
@@ -69,4 +74,8 @@
 /* Выравниваем навигационное меню вправо */
 .app-header-content .ms-auto {
     margin-left: 200px !important;
+}
+
+.app-header-content .navbar-collapse {
+    width: 100% !important;
 }

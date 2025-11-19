@@ -1,14 +1,11 @@
 import type { FC } from "react";
-import { Link } from "react-router-dom";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Carousel, Col, Container, Row } from "react-bootstrap";
 import { AppHeader } from "./AppHeader"
 import "./components/HomePage.css"; 
 import heroImage from "./components/Rectangle1.png"; 
-
-const ROUTES = {
-  DEVICES: "/components",
-  REQUESTS: "/bidups",
-};
+// Добавьте импорт дополнительных изображений для карусели
+import image2 from "./components/Rectangle2.png"; // Замените на ваши изображения
+import image3 from "./components/Rectangle3.png"; // Замените на ваши изображения
 
 export const HomePage: FC = () => {
   return (
@@ -26,24 +23,34 @@ export const HomePage: FC = () => {
           </Col>
 
           <Col xs={12} md={5} className="hero-image-col">
-            <img src={heroImage} alt="Компьютерные аксессуары" />
+            {/* Заменяем статичное изображение на карусель */}
+            <Carousel fade indicators={false} controls={true} interval={3000}>
+              <Carousel.Item>
+                <img
+                  className="d-block w-100 carousel-image"
+                  src={heroImage}
+                  alt="Первое изображение ИБП"
+                />
+              </Carousel.Item>
+              <Carousel.Item>
+                <img
+                  className="d-block w-100 carousel-image"
+                  src={image2}
+                  alt="Второе изображение ИБП"
+                />
+              </Carousel.Item>
+              <Carousel.Item>
+                <img
+                  className="d-block w-100 carousel-image"
+                  src={image3}
+                  alt="Третье изображение ИБП"
+                />
+              </Carousel.Item>
+            </Carousel>
           </Col>
         </Row>
 
-        <Row className="text-center mt-4">
-          <Col className="d-flex justify-content-center hero-buttons-container"> 
-            <Link to={ROUTES.DEVICES} className="d-inline-block">
-              <Button variant="primary" className="hero-button">
-                Устройства
-              </Button>
-            </Link>
-            <Link to={ROUTES.REQUESTS} className="d-inline-block">
-              <Button variant="primary" className="hero-button">
-                Заявки
-              </Button>
-            </Link>
-          </Col>
-        </Row>
+        {/* Убрана секция с кнопками */}
       </Container>
     </div>
   );

@@ -2,25 +2,28 @@ import type { FC } from "react";
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-
+import { Link } from 'react-router-dom';
+import "./components/NavigationMenu.css";
 
 export const NavigationMenu: FC = () => {
   return (
-    // Убираем bg="light" и expand="lg", чтобы стилизировать его в AppHeader
-    <Navbar expand="lg"> 
+    <Navbar expand="lg" collapseOnSelect>
       <Container>
-        {/* Убрал Navbar.Brand, так как AppHeader уже содержит заголовок */}
-        
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          {/* ms-auto: Сдвигает ссылки вправо (аналог me-auto в старых версиях) */}
-          <Nav className="ms-auto"> 
-            <Nav.Link href="/">Домой</Nav.Link>
-            <Nav.Link href="/components">Компоненты</Nav.Link>
+        <Navbar.Toggle 
+          aria-controls="basic-navbar-nav" 
+          className="navbar-toggler-custom"
+        />
+        <Navbar.Collapse id="basic-navbar-nav" className="navbar-collapse-custom">
+          <Nav className="ms-auto nav-links-custom">
+            <Nav.Link as={Link} to="/" className="nav-link-custom">
+              Домой
+            </Nav.Link>
+            <Nav.Link as={Link} to="/components" className="nav-link-custom">
+              Компоненты
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
   );
-}
+};

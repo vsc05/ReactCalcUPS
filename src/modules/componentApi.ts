@@ -1,4 +1,6 @@
 // componentApi.ts
+import { API_BASE_URL } from './apiConfig';
+
 export interface Component {
   id: number;
   image: string;
@@ -19,13 +21,16 @@ export interface ComponentResponse {
 }
 
 export const getComponentsByTitle = async (title = ""): Promise<ComponentsResponse> => {
-  return fetch(`/api/component?query=${title}`).then(
-    (response) => response.json()
-  );
+  return fetch(`${API_BASE_URL}/component?query=${title}`)
+    .then(response => response.json());
 };
 
 export const getComponentById = async (id: number | string): Promise<ComponentResponse> => {
-  return fetch(`/api/component/${id}`).then(
-    (response) => response.json()
-  );
+  return fetch(`${API_BASE_URL}/component/${id}`)
+    .then(response => response.json());
+};
+
+export const getCartIcon = async (): Promise<ComponentResponse> => {
+  return fetch(`${API_BASE_URL}/UPSbid`)
+    .then(response => response.json());
 };
