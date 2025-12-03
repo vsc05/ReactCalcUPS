@@ -1,0 +1,44 @@
+// src/store.ts
+import { configureStore } from '@reduxjs/toolkit';
+import userReducer from './slices/userSlice';
+import searchReducer from './slices/searchSlice';
+import componentsReducer from './slices/componentsSlice';
+import cartReducer from './slices/cartSlice';
+
+// Кастомный мидлвар для сброса состояния при логауте
+const logoutMiddleware = (store: any) => (next: any) => (action: any) => {
+  // Если это действие успешного логаута, сбрасываем все редьюсеры
+  if (action.type === 'user/logoutUserAsync/fulfilled') {
+    // Получаем текущий state
+    const state = store.getState();
+    
+    // Сбрасываем все редьюсеры вручную
+    store.dispatch({ type: 'RESET_ALL' });
+    
+    // Также вызываем reset для каждого редьюсера
+    store.dispatch({ type: 'user/resetUser' });
+    store.dispatch({ type: 'cart/resetCart' });
+    store.dispatch({ type: 'search/clearSearch' });
+    
+    // Очищаем localStorage
+    localStorage.removeItem('persist:root');
+  }
+  
+  return next(action);
+};
+
+export const store = configureStore({
+  reducer: {
+    user: userReducer,
+    search: searchReducer,
+    components: componentsReducer,
+    cart: cartReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(logoutMiddleware),
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
