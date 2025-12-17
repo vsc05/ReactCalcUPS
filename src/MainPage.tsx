@@ -1,13 +1,22 @@
-import { type FC, useState, useEffect, useCallback } from "react";
+import { type FC, useEffect, useState } from "react";
 import "./components/MainPage.css";
 import { Spinner } from "react-bootstrap";
-import { type Component, getComponentsByTitle } from "./modules/componentApi"; 
-import { COMPONENTS_MOCK } from "./modules/mock"; 
 import { BreadCrumbs } from "./BreadCrumbs"; 
-import { ROUTE_LABELS } from "../Routes";
 import { AppHeader } from "./AppHeader";
-import defaultImage from "./DefaultImage.png"
+import { Link } from "react-router-dom";
+import defaultImage from "./DefaultImage.png";
+import { useAppDispatch, useAppSelector } from "./hooks/redux";
+import { 
+  setSearchValue, 
+  addToSearchHistory 
+} from "./slices/searchSlice";
+import { 
+  fetchComponents, 
+  filterComponents 
+} from "./slices/componentsSlice";
+import { getCartIcon, type ComponentResponse } from "./modules/componentApi";
 
+// DeviceCard компонент остается без изменений
 interface DeviceCardProps {
   id: number;
   title: string;
@@ -25,9 +34,9 @@ const DeviceCard: FC<DeviceCardProps> = ({ id, title, image }) => {
       <img src={image || defaultImage} alt="Изображение" className="card-image" />
       <div className="card-title">{title}</div>
       <div className="card-actions">
-        <a href={`/components/${id}`} className="btn-details">
+        <Link to={`/components/${id}`} className="btn-details">
           Подробнее
-        </a>
+        </Link>
         <form method="POST" action="/add-to-bid" style={{ display: "inline" }} onSubmit={handleAddSubmit}>
           <input type="hidden" name="component_id" value={id} />
           <button type="submit" className="btn-add">
@@ -40,42 +49,68 @@ const DeviceCard: FC<DeviceCardProps> = ({ id, title, image }) => {
 };
 
 export const DevicesPage: FC = () => {
-  const [searchValue, setSearchValue] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [components, setComponents] = useState<Component[]>([]);
-  const cartCount = 2;
+  const dispatch = useAppDispatch();
+  
+  // Получаем состояние из Redux
+  const { searchValue } = useAppSelector((state) => state.search);
+  const { 
+    filteredItems: components, 
+    loading, 
+    error 
+  } = useAppSelector((state) => state.components);
 
-  const loadComponents = useCallback((query: string = "") => {
-    setLoading(true);
-    getComponentsByTitle(query)
-      .then((response) => {
-        const list = response?.data?.Components?.filter((item) => !item.is_delete) || [];
-        setComponents(list);
-      })
-      .catch((error) => {
-        console.error("Ошибка при запросе компонентов:", error);
-        setComponents(COMPONENTS_MOCK); 
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  const [cartLoading, setCartLoading] = useState(false);
 
+  // Загрузка компонентов при монтировании
   useEffect(() => {
-    loadComponents();
-  }, [loadComponents]);
+    dispatch(fetchComponents(searchValue));
+  }, [dispatch]);
+
+  // При изменении поискового запроса фильтруем компоненты
+  useEffect(() => {
+    if (searchValue) {
+      dispatch(filterComponents({ searchValue }));
+    }
+  }, [searchValue, dispatch]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    loadComponents(searchValue);
+    // Добавляем запрос в историю
+    if (searchValue) {
+      dispatch(addToSearchHistory(searchValue));
+    }
+    // Загружаем компоненты с новым поисковым запросом
+    dispatch(fetchComponents(searchValue));
+  };
+
+  const handleSearchChange = (value: string) => {
+    dispatch(setSearchValue(value));
+  };
+
+  const handleCartClick = async (e: React.MouseEvent) => {
+    e.preventDefault(); 
+    console.log("Cart icon clicked - starting request");
+    
+    setCartLoading(true);
+    try {
+      console.log("Calling getCartIcon...");
+      const cartData: ComponentResponse = await getCartIcon();
+      console.log("Cart data received:", cartData);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    } finally {
+      setCartLoading(false);
+    }
   };
 
   return (
     <div className="devices-page-wrapper">
       <header>
-       <AppHeader />
+        <AppHeader />
       </header>
 
       <div style={{ width: '100%', maxWidth: '1200px', padding: '0 20px' }}>
-          <BreadCrumbs crumbs={[{ label: ROUTE_LABELS.COMPONENTS || 'Устройства' }]} />
+        <BreadCrumbs crumbs={[{ label: "Компоненты" }]} />
       </div>
 
       <h1>Устройства</h1>
@@ -86,7 +121,7 @@ export const DevicesPage: FC = () => {
           name="query"
           placeholder="Поиск компонентов"
           value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
+          onChange={(e) => handleSearchChange(e.target.value)}
         />
         <button type="submit">Найти</button>
       </form>
@@ -94,6 +129,12 @@ export const DevicesPage: FC = () => {
       {loading && (
         <div className="loadingBg">
           <Spinner animation="border" />
+        </div>
+      )}
+
+      {error && (
+        <div style={{ textAlign: "center", color: "red", margin: "20px 0" }}>
+          {error}
         </div>
       )}
 
@@ -114,10 +155,22 @@ export const DevicesPage: FC = () => {
         )}
       </div>
 
-      <a href="/calcups/7" className="cart-icon">
-        <img src="http://127.0.0.1:9000/test/image4.png" alt="Корзина" />
-        <span className="cart-count">{cartCount}</span>
-      </a>
+      <div style={{ position: 'relative' }}>
+        <Link to="#" className="cart-icon" onClick={handleCartClick}>
+          <img src="http://127.0.0.1:9000/test/image4.png" alt="Корзина" />
+        </Link>
+        {cartLoading && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 10
+          }}>
+            <Spinner animation="border" size="sm" />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -29,3 +29,9 @@ export const getComponentById = async (id: number | string): Promise<ComponentRe
     (response) => response.json()
   );
 };
+
+export const getCartIcon = async (): Promise<ComponentResponse> => {
+  return fetch(`/api/UPSbid`).then(
+    (response) => response.json()
+  );
+};

@@ -1,7 +1,6 @@
 import "./components/ComponentPage.css"; 
 import { type FC, useEffect, useState } from "react";
 import { BreadCrumbs } from "./BreadCrumbs";
-import { ROUTES, ROUTE_LABELS } from "../Routes";
 import { useParams } from "react-router-dom";
 import { type Component, getComponentById } from "./modules/componentApi";
 import { Spinner, Image } from "react-bootstrap";
@@ -35,7 +34,7 @@ export const ComponentPage: FC = () => {
       <div className="component-breadcrumbs-wrapper">
           <BreadCrumbs
             crumbs={[
-              { label: ROUTE_LABELS.COMPONENTS, path: ROUTES.COMPONENTS },
+              { label: "Компоненты", path: "/components" },
               { label: pageData?.title || "Компонент" },
             ]}
           />

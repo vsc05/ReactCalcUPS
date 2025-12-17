@@ -1,0 +1,74 @@
+/* === Бургер всегда в шапке === */
+.app-header-content .navbar {
+    position: relative;
+    z-index: 10; /* чтобы бургер был сверху */
+}
+
+/* Убираем фон контейнера внутри */
+.app-header-content .navbar .container {
+    width: auto !important;
+    padding: 0 !important;
+}
+
+/* === КОЛАПС ДОЛЖЕН ВЫПАДАТЬ НИЖЕ ХЕДЕРА, А НЕ ВНУТРИ === */
+.app-header-content .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 220px;
+    background: #2CAEFF;
+    border-radius: 0 0 8px 8px;
+    padding: 10px 0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    z-index: 6; /* выше затемнения */
+}
+
+
+/* Чтобы меню не ломало верстку */
+.app-header-content {
+    position: relative;
+}
+
+/* Чтобы ссылки падали столбиком */
+.app-header-content .navbar-collapse .nav-link {
+    display: block;
+    padding: 12px 16px;
+    color: white !important;
+    font-weight: 600;
+}
+
+
+/* Анимация (необязательно, но красиво) */
+.app-header-content .navbar-collapse.collapsing {
+    height: auto !important;
+    transition: opacity .25s ease;
+}
+
+.app-header-content .navbar-collapse.show {
+    opacity: 1;
+}
+
+/* Тёмный фон позади меню */
+.navbar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .25s ease;
+    z-index: 5;
+}
+
+/* Когда меню открыто */
+.navbar-backdrop.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Меню под шапкой */
+
+
