@@ -30,7 +30,7 @@
 .content-container {
   padding-top: 40px; 
   padding-bottom: 40px;
-  max-width: 1200px;
+  max-width: 70%;
 }
 
 /* --- ГЛАВНЫЙ БАННЕР --- */
@@ -74,38 +74,62 @@
   color: white; 
 }
 
-/* --- КОНТЕЙНЕР ДЛЯ ИЗОБРАЖЕНИЯ (правая часть) --- */
+/* --- КОНТЕЙНЕР ДЛЯ КАРУСЕЛИ (правая часть) --- */
 .hero-image-col {
-  /* Блок, который резервирует место, если изображение не абсолютно позиционировано */
+  /* Блок для карусели */
   flex: 0 0 40%;
-  position: fixed;
   min-height: 350px;
-  margin-left: 550px;
+  padding: 0;
+  position: relative;
 }
 
-.hero-image-col img {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: auto;
-    /* Устанавливаем диагональное обрезание, если изображение не обрезано заранее, 
-       но если оно уже обрезано (как вы указали), достаточно позиционирования */
-    clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
-    
-    /* Для макета используем только позиционирование */
-    max-height: 100%;
-    object-fit: cover;
+/* --- СТИЛИ ДЛЯ КАРУСЕЛИ --- */
+.carousel {
+  height: 100%;
+  border-radius: 0;
+  overflow: hidden;
 }
 
+.carousel-item {
+  height: 100%;
+}
+
+.carousel-image {
+  height: 350px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.7;
+}
+
+.carousel-control-prev {
+  left: 15px;
+}
+
+.carousel-control-next {
+  right: 15px;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.5);
+}
 
 /* --- Адаптивность --- */
 @media (min-width: 992px) { /* Десктоп */
-    .hero-image-col img {
-        right: -20px; 
-        max-width: 200%; /* Позволяет изображению заходить на синий блок */
-        height: 100%;
-        clip-path: none; /* Предполагаем, что изображение уже обрезано */
-    }
+  .hero-image-col {
+    margin-left: 0;
+  }
 }
 
 @media (max-width: 991.98px) { /* Планшеты и ниже */
@@ -116,7 +140,7 @@
   .hero-text-col, .hero-image-col {
     flex: 0 0 100%;
     max-width: 100%;
-    min-height: 150px;
+    min-height: auto;
     padding: 20px;
   }
   
@@ -130,38 +154,26 @@
   }
   
   .hero-image-col {
-      min-height: 250px;
-      position: relative;
+    min-height: 250px;
+    padding: 0;
   }
 
-  .hero-image-col img {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      clip-path: none; 
-      border-radius: 0 0 12px 12px;
+  .carousel-image {
+    height: 250px;
+    border-radius: 0 0 12px 12px;
   }
 }
 
-
-.hero-button {
-  min-width: 150px;
-  font-weight: bold;
-  margin: 15px 0px;
+@media (max-width: 576px) { /* Мобильные */
+  .hero-text-col h1 {
+    font-size: 2rem;
+  }
   
-  background-color: white !important; 
-  color: #2CAEFF !important;
-  border: 3px solid #2CAEFF !important;
-  border-radius: 10px;
-  font-size: 1.2rem;
-  transition: all 0.2s;
-}
-.hero-buttons-container > .d-inline-block:first-child {
-    margin-right: 20px; /* Отступ справа от первой кнопки */
-}
-
-.hero-button:hover {
-    background-color: #2CAEFF !important;
-    color: white !important;
+  .hero-text-col p {
+    font-size: 1rem;
+  }
+  
+  .carousel-image {
+    height: 200px;
+  }
 }
