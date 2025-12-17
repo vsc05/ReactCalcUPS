@@ -9,6 +9,8 @@ import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
 import BidPage from "./BidPage"; // Добавь этот импорт
 import ProfilePage from "./ProfilePage"; // Добавляем импорт
+import BidListingsPage from "./BidListingsPage"; // <-- Добавь этот импорт
+import BidDetailsPage from "./BidDetailsPage"; // ⭐️ Добавляем импорт страницы деталей ⭐️
 
 
 
@@ -33,8 +35,10 @@ function App() {
         <Route path="/components/:id" element={<ComponentPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/cart/:id" element={<BidPage />} /> {/* Добавь этот маршрут */}
+        <Route path="/bidups/:id" element={<BidPage />} /> {/* Добавь этот маршрут */}
+        <Route path="/biddetailsups/:id" element={<BidDetailsPage />} />
         <Route path="/profile" element={<ProfilePage />} /> {/* Добавляем маршрут */}
+        <Route path="/my-bidsups" element={<BidListingsPage />} /> {/* <-- Добавляем новый маршрут */}
 
       </Routes>
     </BrowserRouter>

@@ -138,7 +138,6 @@ export const DevicesPage: FC = () => {
 
   const handleAddToCart = async (id: number): Promise<void> => {
     if (!isAuthenticated) {
-      alert('Для добавления товаров в корзину необходимо войти в систему');
       navigate('/login', { state: { from: '/components' } });
       return;
     }
@@ -166,9 +165,7 @@ export const DevicesPage: FC = () => {
         
         // Показываем уведомление
         const addedItem = components.find(item => item.id === id);
-        if (addedItem) {
-          alert(`Товар "${addedItem.title}" добавлен в корзину!`);
-        }
+        
       }
     } catch (error: any) {
       // Откатываем оптимистичное обновление при ошибке
@@ -177,9 +174,7 @@ export const DevicesPage: FC = () => {
       
       if (error.message?.includes('Токен не найден') || error.message?.includes('401')) {
         navigate('/login');
-      } else {
-        alert('Не удалось добавить товар в корзину');
-      }
+      } 
     } finally {
       setAddingId(null);
     }
@@ -197,9 +192,7 @@ export const DevicesPage: FC = () => {
     dispatch(fetchCartAsync());
     
     if (cart.bid_id) {
-      navigate(`/cart/${cart.bid_id}`);
-    } else {
-      alert('Корзина пуста. Добавьте товары, чтобы оформить заказ.');
+      navigate(`/bidups/${cart.bid_id}`);
     }
   };
 

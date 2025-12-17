@@ -1,3 +1,5 @@
+// src/slices/userSlice.ts
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api, setAuthToken } from '../api';
 import type { RootState } from '../store';
@@ -10,7 +12,8 @@ interface UserState {
   token: string | null;
   error: string | null;
   loading: boolean;
-  userId?: number; // userID из JWT токена
+  userId?: number; 
+  isModerator: boolean; 
 }
 
 const initialState: UserState = {
@@ -19,12 +22,12 @@ const initialState: UserState = {
   token: null,
   error: null,
   loading: false,
+  isModerator: false, 
 };
 
 // Функция для декодирования JWT токена
 const decodeJWT = (token: string) => {
   try {
-    // JWT формат: header.payload.signature
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const jsonPayload = decodeURIComponent(
@@ -40,7 +43,7 @@ const decodeJWT = (token: string) => {
   }
 };
 
-// Асинхронное действие для авторизации
+// Асинхронное действие для логина
 export const loginUserAsync = createAsyncThunk(
   'user/loginUserAsync',
   async (credentials: { login: string; password: string }, { rejectWithValue }) => {
@@ -80,7 +83,7 @@ export const registerUserAsync = createAsyncThunk(
   }
 );
 
-// НОВОЕ: Асинхронное действие для обновления профиля (логина/пароля)
+// Асинхронное действие для обновления профиля (логина/пароля)
 export const updateUserProfileAsync = createAsyncThunk(
   'user/updateUserProfileAsync',
   async (
@@ -101,7 +104,6 @@ export const updateUserProfileAsync = createAsyncThunk(
       }
 
       // Подготавливаем данные для отправки на сервер
-      // В запросе PUT http://localhost:8080/api/users/1{ "login": "user1", "password":"123" }
       const requestBody: { login?: string; password: string; old_password: string } = {
         old_password: updateData.currentPassword, // Старый пароль для подтверждения
         // Отправляем новый пароль, если он есть, иначе старый (на случай если меняется только логин)
@@ -141,7 +143,7 @@ export const updateUserProfileAsync = createAsyncThunk(
   }
 );
 
-// Асинхронное действие для выхода с очисткой корзины
+// Асинхронное действие для выхода с очисткой черновика заявки
 export const logoutUserAsync = createAsyncThunk(
   'user/logoutUserAsync',
   async (_, { getState, rejectWithValue, dispatch }) => {
@@ -150,10 +152,10 @@ export const logoutUserAsync = createAsyncThunk(
       const token = state.user.token;
       const bidId = state.cart.bid_id;
       
-      // 1. Очищаем корзину, если она есть
+      // 1. Очищаем черновик заявки, если он есть
       if (token && bidId) {
         try {
-          // Сначала получаем детали корзины
+          // Сначала получаем детали корзины для списка компонентов
           const cartDetailResponse = await fetch(`/api/bidUPS/${bidId}`, {
             method: 'GET',
             headers: {
@@ -186,18 +188,25 @@ export const logoutUserAsync = createAsyncThunk(
             }
           }
           
-          // Теперь удаляем саму корзину с moderator_id: 3
-          await fetch(`/api/bidUPS/${bidId}`, {
+          // ⭐️ ИСПРАВЛЕНИЕ ⭐️
+          // Удаляем саму корзину (черновик). 
+          // Удаляем `body: JSON.stringify({ moderator_id: 3 })`, так как черновик должен удалять владелец
+          const deleteBidResponse = await fetch(`/api/bidUPS/${bidId}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ moderator_id: 3 })
+            // Тело запроса удалено, так как удаление черновика, вероятно, не требует moderator_id
           });
+
+          if (!deleteBidResponse.ok) {
+            const errorText = await deleteBidResponse.text().catch(() => "Неизвестная ошибка");
+            console.warn(`Не удалось удалить корзину (BID ID: ${bidId}): ${deleteBidResponse.status} - ${errorText}`);
+          }
           
         } catch (cartError) {
-          console.warn('Не удалось удалить корзину на сервере:', cartError);
+          console.warn('Критическая ошибка при попытке очистить черновик:', cartError);
         }
       }
       
@@ -230,6 +239,7 @@ export const logoutUserAsync = createAsyncThunk(
   }
 );
 
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -245,6 +255,7 @@ const userSlice = createSlice({
       state.error = null;
       state.loading = false;
       state.userId = undefined;
+      state.isModerator = false; 
     },
     // Установка пользователя (для сохранения при перезагрузке)
     setUserFromStorage: (state, action) => {
@@ -254,6 +265,7 @@ const userSlice = createSlice({
       state.error = null;
       state.loading = false;
       state.userId = action.payload.userId;
+      state.isModerator = action.payload.isModerator || false; 
     },
     // Обновление имени пользователя
     updateUsername: (state, action: { payload: string }) => {
@@ -276,33 +288,22 @@ const userSlice = createSlice({
         
         console.log('✅ Login successful, setting username:', action.payload.login);
         
-        // Сохраняем логин из credentials
         state.username = action.payload.login;
         
-        // Декодируем JWT токен для получения userID
+        // Декодируем JWT токен для получения userID и флага модератора
         if (token) {
           try {
             const decoded = decodeJWT(token);
             console.log('🔑 Decoded JWT payload:', decoded);
             
-            // Пробуем получить userID из разных полей (в зависимости от сервера)
+            // ЛОГИКА МОДЕРАТОРА
+            state.isModerator = decoded?.IsModerator === true || decoded?.is_moderator === true;
+            
+            // Пробуем получить userID
             if (decoded) {
-              // 💡 ДОБАВЛЕНА ПРОВЕРКА НА user_db_id
               if (decoded.user_db_id !== undefined) { 
                 state.userId = decoded.user_db_id;
                 console.log('👤 Got userID from user_db_id field:', state.userId);
-              } else if (decoded.userDBID !== undefined) {
-                state.userId = decoded.userDBID;
-                console.log('👤 Got userID from userDBID field:', state.userId);
-              } else if (decoded.userID !== undefined) {
-                state.userId = decoded.userID;
-                console.log('👤 Got userID from userID field:', state.userId);
-              } else if (decoded.sub !== undefined) {
-                state.userId = decoded.sub;
-                console.log('👤 Got userID from sub field:', state.userId);
-              } else if (decoded.user_id !== undefined) {
-                state.userId = decoded.user_id;
-                console.log('👤 Got userID from user_id field:', state.userId);
               } else if (decoded.userId !== undefined) {
                 state.userId = decoded.userId;
                 console.log('👤 Got userID from userId field:', state.userId);
@@ -314,7 +315,6 @@ const userSlice = createSlice({
             setAuthToken(token);
           } catch (error) {
             console.error('❌ Error decoding JWT token:', error);
-            // Продолжаем без userID
           }
         }
         
@@ -334,7 +334,6 @@ const userSlice = createSlice({
       .addCase(updateUserProfileAsync.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        // Если логин был изменен, обновляем его в state, чтобы ProfilePage отображал новое имя
         if (action.payload.newLogin) {
           state.username = action.payload.newLogin;
         }

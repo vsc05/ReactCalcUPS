@@ -41,6 +41,12 @@ export const NavBar: FC = () => {
             <Nav.Link as={Link} to="/components" className="nav-link-custom">
               Компоненты
             </Nav.Link>
+            {/* ⭐️ НОВАЯ ССЫЛКА НА СПИСОК ЗАЯВОК ⭐️ */}
+            {isAuthenticated && (
+              <Nav.Link as={Link} to="/my-bidsups" className="nav-link-custom">
+                Мои заявки
+              </Nav.Link>
+            )}
           </Nav>
           
           <Nav className="ms-auto align-items-center">
@@ -79,7 +85,7 @@ export const NavBar: FC = () => {
                   </span>
                 </Nav.Link>
                 {cart.bid_id && (
-                  <Nav.Link as={Link} to={`/cart/${cart.bid_id}`} className="me-3">
+                  <Nav.Link as={Link} to={`/bidups/${cart.bid_id}`} className="me-3">
                     <Button variant="outline-info" size="sm">
                       Корзина ({cart.count_items || 0})
                     </Button>

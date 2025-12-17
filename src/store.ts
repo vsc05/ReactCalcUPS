@@ -4,6 +4,7 @@ import userReducer from './slices/userSlice';
 import searchReducer from './slices/searchSlice';
 import componentsReducer from './slices/componentsSlice';
 import cartReducer from './slices/cartSlice';
+import bidsReducer from './slices/bidsSlice'; // <--- ДОБАВЛЕНО
 
 // Кастомный мидлвар для сброса состояния при логауте
 const logoutMiddleware = (store: any) => (next: any) => (action: any) => {
@@ -19,6 +20,7 @@ const logoutMiddleware = (store: any) => (next: any) => (action: any) => {
     store.dispatch({ type: 'user/resetUser' });
     store.dispatch({ type: 'cart/resetCart' });
     store.dispatch({ type: 'search/clearSearch' });
+    store.dispatch({ type: 'bids/clearBids' }); // <-- Добавляем сброс для заявок
     
     // Очищаем localStorage
     localStorage.removeItem('persist:root');
@@ -33,6 +35,7 @@ export const store = configureStore({
     search: searchReducer,
     components: componentsReducer,
     cart: cartReducer,
+    bids: bidsReducer, 
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
