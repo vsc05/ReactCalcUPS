@@ -47,7 +47,7 @@ Frontend-часть сервиса для расчета необходимой 
    git clone [https://github.com/vsc05/ReactCalcUPS.git](https://github.com/vsc05/ReactCalcUPS.git)
    cd ReactCalcUPS
    npm install
-   npm start
+   npm run dev
    ```
 👤 Разработчик
 vsc05
