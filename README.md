@@ -33,8 +33,8 @@ Frontend-часть сервиса для расчета необходимой 
 
 | Проект | Описание | Ссылка |
 | :--- | :--- | :--- |
-| **IBPCalculating** | Основной бэкенд с логикой расчетов | [Открыть ↗](https://github.com/vsc05/IBPCalculating) |
-| **ripDjango** | Асинхронный микросервис на Django | [Открыть ↗](https://github.com/vsc05/ripDjango) |
+| **IBPCalculating** | Основной бэкенд со всеми методами | [Открыть ↗](https://github.com/vsc05/IBPCalculating) |
+| **ripDjango** | Асинхронный микросервис на Django для расчета | [Открыть ↗](https://github.com/vsc05/ripDjango) |
 
 ---
 
