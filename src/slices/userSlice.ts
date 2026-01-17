@@ -3,7 +3,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api, setAuthToken } from '../api';
 import type { RootState } from '../store';
-import { resetCart } from './cartSlice';
+import { resetbidUPS } from './cartSlice';
 import { clearSearch } from './searchSlice';
 
 interface UserState {
@@ -150,7 +150,7 @@ export const logoutUserAsync = createAsyncThunk(
     try {
       const state = getState() as RootState;
       const token = state.user.token;
-      const bidId = state.cart.bid_id;
+      const bidId = state.bidUPS.bid_id;
       
       // 1. Очищаем черновик заявки, если он есть
       if (token && bidId) {
@@ -220,7 +220,7 @@ export const logoutUserAsync = createAsyncThunk(
       }
       
       // 3. Сбрасываем состояние на клиенте
-      dispatch(resetCart()); // Сбрасываем корзину
+      dispatch(resetbidUPS()); // Сбрасываем корзину
       dispatch(clearSearch()); // Сбрасываем поиск
       dispatch(resetUser()); // Сбрасываем пользователя
       
@@ -230,7 +230,7 @@ export const logoutUserAsync = createAsyncThunk(
       return true;
     } catch (error: any) {
       // Даже если произошла ошибка, сбрасываем состояние на клиенте
-      dispatch(resetCart());
+      dispatch(resetbidUPS());
       dispatch(clearSearch());
       dispatch(resetUser());
       setAuthToken(null);

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 
-interface CartState {
+interface bidUPSState {
   bid_id: number | null;
   count_items: number;
   loading: boolean;
@@ -9,7 +9,7 @@ interface CartState {
   calculation_result: number | null; 
 }
 
-interface CartApiResponse {
+interface bidUPSApiResponse {
   data: {
     bid_id: number | null; // Может быть null, если корзина пуста или удалена
     items_count?: number;
@@ -19,7 +19,7 @@ interface CartApiResponse {
   result?: number; // Если результат возвращается на верхнем уровне
 }
 
-const initialState: CartState = {
+const initialState: bidUPSState = {
   bid_id: null,
   count_items: 0,
   loading: false,
@@ -30,12 +30,12 @@ const initialState: CartState = {
 // --- Асинхронные действия (Thunks) ---
 
 // Асинхронное действие для получения корзины (без изменений)
-export const fetchCartAsync = createAsyncThunk<
-  CartApiResponse,
+export const fetchbidUPSAsync = createAsyncThunk<
+  bidUPSApiResponse,
   void,
   { rejectValue: string }
 >(
-  'cart/fetchCart',
+  'bidUPS/fetchbidUPS',
   async (_, { getState, rejectWithValue }) => {
     try {
       const state = getState() as any;
@@ -57,7 +57,7 @@ export const fetchCartAsync = createAsyncThunk<
         return rejectWithValue(`Ошибка HTTP: ${response.status}`);
       }
       
-      const data: CartApiResponse = await response.json();
+      const data: bidUPSApiResponse = await response.json();
       return data;
       
     } catch (error: any) {
@@ -67,12 +67,12 @@ export const fetchCartAsync = createAsyncThunk<
 );
 
 // Асинхронное действие для добавления в корзину (без изменений)
-export const addToCartAsync = createAsyncThunk<
-  CartApiResponse,
+export const addTobidUPSAsync = createAsyncThunk<
+  bidUPSApiResponse,
   number, // componentId (не CalcUPS ID)
   { rejectValue: string }
 >(
-  'cart/addToCart',
+  'bidUPS/addTobidUPS',
   async (itemId, { getState, rejectWithValue }) => {
     try {
       const state = getState() as any;
@@ -95,7 +95,7 @@ export const addToCartAsync = createAsyncThunk<
         return rejectWithValue(`Ошибка HTTP: ${addResponse.status}`);
       }
       
-      const addData: CartApiResponse = await addResponse.json();
+      const addData: bidUPSApiResponse = await addResponse.json();
       return addData; 
       
     } catch (error: any) {
@@ -105,12 +105,12 @@ export const addToCartAsync = createAsyncThunk<
 );
 
 // Асинхронное действие для удаления из корзины (без изменений)
-export const removeFromCartAsync = createAsyncThunk<
-  CartApiResponse,
+export const removeFrombidUPSAsync = createAsyncThunk<
+  bidUPSApiResponse,
   { bidId: number; componentId: number }, // componentId здесь - это ID записи CalcUPS
   { rejectValue: string }
 >(
-  'cart/removeFromCart',
+  'bidUPS/removeFrombidUPS',
   async ({ bidId, componentId }, { getState, rejectWithValue }) => {
     try {
       const state = getState() as any;
@@ -136,7 +136,7 @@ export const removeFromCartAsync = createAsyncThunk<
         return rejectWithValue(`Ошибка HTTP: ${response.status}`);
       }
       
-      const data: CartApiResponse = await response.json();
+      const data: bidUPSApiResponse = await response.json();
       return data; 
       
     } catch (error: any) {
@@ -146,17 +146,17 @@ export const removeFromCartAsync = createAsyncThunk<
 );
 
 // Асинхронное действие для полной очистки корзины (без изменений)
-export const clearCartAsync = createAsyncThunk<
+export const clearbidUPSAsync = createAsyncThunk<
   void,
   void,
   { rejectValue: string }
 >(
-  'cart/clearCart',
+  'bidUPS/clearbidUPS',
   async (_, { getState, rejectWithValue }) => {
     try {
       const state = getState() as any;
       const token = state.user?.token;
-      const bidId = state.cart?.bid_id;
+      const bidId = state.bidUPS?.bid_id;
       
       if (!token) {
         return rejectWithValue('Токен не найден. Авторизуйтесь');
@@ -189,11 +189,11 @@ export const clearCartAsync = createAsyncThunk<
 
 // 🚨 НОВОЕ АСИНХРОННОЕ ДЕЙСТВИЕ: Сохранение входящих токов
 export const saveBidIncomingCurrentAsync = createAsyncThunk<
-  CartApiResponse,
+  bidUPSApiResponse,
   { bidId: number; incomingCurrent: number },
   { rejectValue: string }
 >(
-  'cart/saveBidIncomingCurrent',
+  'bidUPS/saveBidIncomingCurrent',
   async ({ bidId, incomingCurrent }, { getState, rejectWithValue }) => {
     try {
       const state = getState() as any;
@@ -220,7 +220,7 @@ export const saveBidIncomingCurrentAsync = createAsyncThunk<
         return rejectWithValue(`Ошибка сохранения входящих токов: ${response.status} - ${errorText}`);
       }
       
-      const data: CartApiResponse = await response.json();
+      const data: bidUPSApiResponse = await response.json();
       return data; 
       
     } catch (error: any) {
@@ -232,11 +232,11 @@ export const saveBidIncomingCurrentAsync = createAsyncThunk<
 
 // 🚨 НОВОЕ АСИНХРОННОЕ ДЕЙСТВИЕ: Формирование заявки и расчет
 export const formBidAsync = createAsyncThunk<
-  CartApiResponse,
+  bidUPSApiResponse,
   number, // bidId
   { rejectValue: string }
 >(
-  'cart/formBid',
+  'bidUPS/formBid',
   async (bidId, { getState, rejectWithValue }) => {
     try {
       const state = getState() as any;
@@ -260,7 +260,7 @@ export const formBidAsync = createAsyncThunk<
         return rejectWithValue(`Ошибка формирования и расчета: ${response.status} - ${errorText}`);
       }
       
-      const data: CartApiResponse = await response.json();
+      const data: bidUPSApiResponse = await response.json();
       return data; 
       
     } catch (error: any) {
@@ -272,12 +272,12 @@ export const formBidAsync = createAsyncThunk<
 
 // --- Слайс и Редьюсеры ---
 
-const cartSlice = createSlice({
-  name: 'cart',
+const bidUPSSlice = createSlice({
+  name: 'bidUPS',
   initialState,
   reducers: {
     // ... (остальные редьюсеры без изменений)
-    updateCartState: (state, action: PayloadAction<{
+    updatebidUPSState: (state, action: PayloadAction<{
       bid_id: number | null;
       count_items: number;
       loading?: boolean;
@@ -288,7 +288,7 @@ const cartSlice = createSlice({
       state.error = null;
     },
     
-    resetCart: (state) => {
+    resetbidUPS: (state) => {
       state.bid_id = null;
       state.count_items = 0;
       state.loading = false;
@@ -296,22 +296,22 @@ const cartSlice = createSlice({
       state.calculation_result = null; // Сбрасываем результат
     },
     
-    setCartError: (state, action: PayloadAction<string>) => {
+    setbidUPSError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
       state.loading = false;
     },
     
-    clearCartError: (state) => {
+    clearbidUPSError: (state) => {
       state.error = null;
     },
     
     // Ручное увеличение счетчика (для оптимистичного обновления)
-    incrementCartCount: (state) => {
+    incrementbidUPSCount: (state) => {
       state.count_items += 1;
     },
     
     // Ручное уменьшение счетчика
-    decrementCartCount: (state) => {
+    decrementbidUPSCount: (state) => {
       state.count_items = Math.max(0, state.count_items - 1);
     },
     
@@ -327,7 +327,7 @@ const cartSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Вспомогательная функция для обновления состояния из ответа API
-    const handleFulfilled = (state: CartState, response: CartApiResponse) => {
+    const handleFulfilled = (state: bidUPSState, response: bidUPSApiResponse) => {
         state.loading = false;
         if (response?.data) {
           state.bid_id = response.data.bid_id;
@@ -336,7 +336,7 @@ const cartSlice = createSlice({
           // Обновляем результат расчета, если он пришел
           state.calculation_result = response.data.result || response.result || null;
         } else {
-           // Если ответа нет, но статус успешный, сброс (например, после clearCartAsync)
+           // Если ответа нет, но статус успешный, сброс (например, после clearbidUPSAsync)
            if (!state.bid_id && state.count_items > 0) {
                state.count_items = 0;
            }
@@ -346,17 +346,17 @@ const cartSlice = createSlice({
     }
     
     // ------------------------------------
-    // Обработка fetchCartAsync (без изменений, кроме использования handleFulfilled)
+    // Обработка fetchbidUPSAsync (без изменений, кроме использования handleFulfilled)
     // ------------------------------------
     builder
-      .addCase(fetchCartAsync.pending, (state) => {
+      .addCase(fetchbidUPSAsync.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchCartAsync.fulfilled, (state, action) => {
+      .addCase(fetchbidUPSAsync.fulfilled, (state, action) => {
         handleFulfilled(state, action.payload);
       })
-      .addCase(fetchCartAsync.rejected, (state, action) => {
+      .addCase(fetchbidUPSAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Не удалось загрузить корзину';
         state.bid_id = null; 
@@ -365,53 +365,53 @@ const cartSlice = createSlice({
       });
 
     // ------------------------------------
-    // Обработка addToCartAsync (без изменений, кроме использования handleFulfilled)
+    // Обработка addTobidUPSAsync (без изменений, кроме использования handleFulfilled)
     // ------------------------------------
     builder
-      .addCase(addToCartAsync.pending, (state) => {
+      .addCase(addTobidUPSAsync.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(addToCartAsync.fulfilled, (state, action) => {
+      .addCase(addTobidUPSAsync.fulfilled, (state, action) => {
         handleFulfilled(state, action.payload);
       })
-      .addCase(addToCartAsync.rejected, (state, action) => {
+      .addCase(addTobidUPSAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Не удалось добавить товар в корзину';
         state.count_items = Math.max(0, state.count_items - 1);
       });
       
     // ------------------------------------
-    // Обработка removeFromCartAsync (без изменений, кроме использования handleFulfilled)
+    // Обработка removeFrombidUPSAsync (без изменений, кроме использования handleFulfilled)
     // ------------------------------------
     builder
-      .addCase(removeFromCartAsync.pending, (state) => {
+      .addCase(removeFrombidUPSAsync.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(removeFromCartAsync.fulfilled, (state, action) => {
+      .addCase(removeFrombidUPSAsync.fulfilled, (state, action) => {
         handleFulfilled(state, action.payload);
       })
-      .addCase(removeFromCartAsync.rejected, (state, action) => {
+      .addCase(removeFrombidUPSAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Не удалось удалить товар из корзины';
       });
       
     // ------------------------------------
-    // Обработка clearCartAsync (без изменений)
+    // Обработка clearbidUPSAsync (без изменений)
     // ------------------------------------
     builder
-      .addCase(clearCartAsync.pending, (state) => {
+      .addCase(clearbidUPSAsync.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(clearCartAsync.fulfilled, (state) => {
+      .addCase(clearbidUPSAsync.fulfilled, (state) => {
         state.loading = false;
         state.bid_id = null;
         state.count_items = 0;
         state.calculation_result = null;
       })
-      .addCase(clearCartAsync.rejected, (state, action) => {
+      .addCase(clearbidUPSAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Не удалось очистить корзину';
       });
@@ -455,21 +455,21 @@ const cartSlice = createSlice({
 });
 
 export const { 
-  updateCartState, 
-  resetCart, 
-  setCartError, 
-  clearCartError,
-  incrementCartCount,
-  decrementCartCount,
+  updatebidUPSState, 
+  resetbidUPS, 
+  setbidUPSError, 
+  clearbidUPSError,
+  incrementbidUPSCount,
+  decrementbidUPSCount,
   setBidId,
   setCalculationResult // Новый экшн
-} = cartSlice.actions;
+} = bidUPSSlice.actions;
 
-export default cartSlice.reducer;
+export default bidUPSSlice.reducer;
 
-export const selectCart = (state: { cart: CartState }) => state.cart;
-export const selectCartItemsCount = (state: { cart: CartState }) => state.cart.count_items;
-export const selectCartBidId = (state: { cart: CartState }) => state.cart.bid_id;
-export const selectCartLoading = (state: { cart: CartState }) => state.cart.loading;
-export const selectCartError = (state: { cart: CartState }) => state.cart.error;
-export const selectCalculationResult = (state: { cart: CartState }) => state.cart.calculation_result;
+export const selectbidUPS = (state: { bidUPS: bidUPSState }) => state.bidUPS;
+export const selectbidUPSItemsCount = (state: { bidUPS: bidUPSState }) => state.bidUPS.count_items;
+export const selectbidUPSBidId = (state: { bidUPS: bidUPSState }) => state.bidUPS.bid_id;
+export const selectbidUPSLoading = (state: { bidUPS: bidUPSState }) => state.bidUPS.loading;
+export const selectbidUPSError = (state: { bidUPS: bidUPSState }) => state.bidUPS.error;
+export const selectCalculationResult = (state: { bidUPS: bidUPSState }) => state.bidUPS.calculation_result;

@@ -34,7 +34,7 @@ export const store = configureStore({
     user: userReducer,
     search: searchReducer,
     components: componentsReducer,
-    cart: cartReducer,
+    bidUPS: cartReducer,
     bids: bidsReducer, 
   },
   middleware: (getDefaultMiddleware) =>

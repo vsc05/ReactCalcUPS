@@ -4,15 +4,15 @@ import { Spinner } from "react-bootstrap";
 import { AppHeader } from "./AppHeader"; // ⭐️ Импорт AppHeader оставлен, как в оригинале ⭐️
 import { useAppDispatch, useAppSelector } from "./hooks/redux"; 
 import { 
-  fetchCartAsync, 
-  removeFromCartAsync,
+  fetchbidUPSAsync, 
+  removeFrombidUPSAsync,
   saveBidIncomingCurrentAsync, 
   formBidAsync,               
-  clearCartAsync,             
-  selectCartLoading,
-  selectCartError,
+  clearbidUPSAsync,             
+  selectbidUPSLoading,
+  selectbidUPSError,
   selectCalculationResult,
-  clearCartError,
+  clearbidUPSError,
 } from "./slices/cartSlice"; 
 import defaultImage from "./DefaultImage.png"; 
 
@@ -49,8 +49,8 @@ export const BidPage: FC = () => {
   const { isAuthenticated, token } = useAppSelector((state) => state.user);
   
   // ⭐️ ИСПОЛЬЗУЕМ REDUX STATE ⭐️
-  const cartLoading = useAppSelector(selectCartLoading);
-  const cartError = useAppSelector(selectCartError);
+  const cartLoading = useAppSelector(selectbidUPSLoading);
+  const cartError = useAppSelector(selectbidUPSError);
   const calculationResult = useAppSelector(selectCalculationResult);
   
   const [bidDetails, setBidDetails] = useState<BidDetails | null>(null);
@@ -69,7 +69,7 @@ export const BidPage: FC = () => {
 
   const clearMessages = () => {
     // 🚨 Очищаем ошибки через Redux
-    dispatch(clearCartError()); 
+    dispatch(clearbidUPSError()); 
     setSuccessMessage(null);
   };
   
@@ -208,13 +208,13 @@ export const BidPage: FC = () => {
     try {
       setDeletingId(componentId);
       
-      await dispatch(removeFromCartAsync({
+      await dispatch(removeFrombidUPSAsync({
         bidId: bidId,
         componentId: componentId // ID CalcUPS
       })).unwrap();
       
       await loadBidDetails();
-      dispatch(fetchCartAsync());
+      dispatch(fetchbidUPSAsync());
       
       setSuccessMessage('Компонент успешно удален.');
       
@@ -233,10 +233,10 @@ export const BidPage: FC = () => {
     
     try {
       // 🚨 ИСПОЛЬЗУЕМ REDUX THUNK
-      await dispatch(clearCartAsync()).unwrap();
+      await dispatch(clearbidUPSAsync()).unwrap();
       
       setBidDetails(null);
-      dispatch(fetchCartAsync());
+      dispatch(fetchbidUPSAsync());
       
       setSuccessMessage('Все компоненты удалены из заявки.');
       navigate('/components');

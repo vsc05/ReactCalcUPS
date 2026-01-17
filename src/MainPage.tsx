@@ -16,14 +16,14 @@ import {
   filterComponents 
 } from "./slices/componentsSlice";
 import { 
-  fetchCartAsync, 
-  addToCartAsync, 
-  updateCartState,
-  selectCart,
-  selectCartItemsCount,
-  selectCartLoading,
-  incrementCartCount,
-  decrementCartCount
+  fetchbidUPSAsync, 
+  addTobidUPSAsync, 
+  updatebidUPSState,
+  selectbidUPS,
+  selectbidUPSItemsCount,
+  selectbidUPSLoading,
+  incrementbidUPSCount,
+  decrementbidUPSCount
 } from "./slices/cartSlice";
 
 interface DeviceCardProps {
@@ -86,18 +86,18 @@ export const DevicesPage: FC = () => {
     error: componentsError 
   } = useAppSelector((state) => state.components);
 
-  const cart = useAppSelector(selectCart);
-  const cartItemsCount = useAppSelector(selectCartItemsCount);
-  const cartLoading = useAppSelector(selectCartLoading);
+  const bidUPS = useAppSelector(selectbidUPS);
+  const bidUPSItemsCount = useAppSelector(selectbidUPSItemsCount);
+  const bidUPSLoading = useAppSelector(selectbidUPSLoading);
   const { isAuthenticated, token } = useAppSelector((state) => state.user);
 
   const [addingId, setAddingId] = useState<number | null>(null);
-  const [localCartCount, setLocalCartCount] = useState(cart.count_items);
+  const [localCartCount, setLocalCartCount] = useState(bidUPS.count_items);
 
   // Синхронизируем локальное состояние с глобальным
   useEffect(() => {
-    setLocalCartCount(cart.count_items);
-  }, [cart.count_items]);
+    setLocalCartCount(bidUPS.count_items);
+  }, [bidUPS.count_items]);
 
   useEffect(() => {
     dispatch(fetchComponents(searchValue));
@@ -105,9 +105,9 @@ export const DevicesPage: FC = () => {
 
   useEffect(() => {
     if (isAuthenticated && token) {
-      dispatch(fetchCartAsync());
+      dispatch(fetchbidUPSAsync());
     } else {
-      dispatch(updateCartState({
+      dispatch(updatebidUPSState({
         bid_id: null,
         count_items: 0,
         loading: false
@@ -146,15 +146,15 @@ export const DevicesPage: FC = () => {
     
     // Оптимистичное обновление: сразу увеличиваем счетчик
     setLocalCartCount(prev => prev + 1);
-    dispatch(incrementCartCount());
+    dispatch(incrementbidUPSCount());
     
     try {
-      const result = await dispatch(addToCartAsync(id)).unwrap();
+      const result = await dispatch(addTobidUPSAsync(id)).unwrap();
       
       if (result?.data) {
         // Обновляем состояние корзины из ответа сервера
         const serverCount = result.data.items_count || result.data.count_items || 0;
-        dispatch(updateCartState({
+        dispatch(updatebidUPSState({
           bid_id: result.data.bid_id,
           count_items: serverCount,
           loading: false
@@ -170,7 +170,7 @@ export const DevicesPage: FC = () => {
     } catch (error: any) {
       // Откатываем оптимистичное обновление при ошибке
       setLocalCartCount(prev => Math.max(0, prev - 1));
-      dispatch(decrementCartCount());
+      dispatch(decrementbidUPSCount());
       
       if (error.message?.includes('Токен не найден') || error.message?.includes('401')) {
         navigate('/login');
@@ -189,15 +189,15 @@ export const DevicesPage: FC = () => {
     }
     
     // Обновляем корзину перед переходом
-    dispatch(fetchCartAsync());
+    dispatch(fetchbidUPSAsync());
     
-    if (cart.bid_id) {
-      navigate(`/bidups/${cart.bid_id}`);
+    if (bidUPS.bid_id) {
+      navigate(`/bidups/${bidUPS.bid_id}`);
     }
   };
 
   // Используем localCartCount для отображения, но если корзина загружается, показываем "..." 
-  const displayCount = cart.loading ? '...' : localCartCount;
+  const displayCount = bidUPS.loading ? '...' : localCartCount;
   
   // Функция для проверки, нужно ли показывать красный бейдж
   const shouldShowRedBadge = isAuthenticated && 
@@ -298,7 +298,7 @@ export const DevicesPage: FC = () => {
       }}>
         <div style={{ position: 'relative' }}>
           <Link 
-            to={isAuthenticated && cart.bid_id ? `/cart/${cart.bid_id}` : "#"}
+            to={isAuthenticated && bidUPS.bid_id ? `/cart/${bidUPS.bid_id}` : "#"}
             className="cart-icon" 
             onClick={handleCartClick}
             style={{ 
@@ -358,7 +358,7 @@ export const DevicesPage: FC = () => {
                   fontSize: '12px',
                   fontWeight: 'bold',
                   boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-                  opacity: cart.loading ? 0.5 : 1
+                  opacity: bidUPS.loading ? 0.5 : 1
                 }}
               >
                 {displayCount}
@@ -366,7 +366,7 @@ export const DevicesPage: FC = () => {
             )}
           </Link>
           
-          {cart.loading && (
+          {bidUPS.loading && (
             <div style={{
               position: 'absolute',
               top: '50%',
